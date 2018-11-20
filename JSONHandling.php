@@ -93,12 +93,44 @@
                 }
             }
         ]}';
-    $decodedJson = json_decode($json);
 
     // Decode JSON data to PHP object
-    $obj = json_decode($json);
-    // Access values from the returned object
-    if(property_exists($obj->results[0], 'data')) {
-        print_r($obj->results[0]->data);
+    $decodedJSON = json_decode($json);
+
+
+    
+    $pixiv  = new \stdClass(); $pixiv->id = 5; $pixiv->buttonName = 'Pixiv'; $pixiv->regex = 'pixiv_id';
+    $danbooru = new \stdClass(); $danbooru->id = 9; $danbooru->buttonName = 'Danbooru';
+    $yandere = new \stdClass(); $yandere->id = 12; $yandere->buttonName = 'Yande.re';
+    $animes = new \stdClass(); $animes->id = 21; $animes->buttonName = 'Anime source'; $animes->regex = 'anidb_aid';
+    $hAnime = new \stdClass(); $hAnime->id = 22; $hAnime->buttonName = 'H source';
+    $gelbooru = new \stdClass(); $gelbooru->id = 25; $gelbooru->buttonName = 'Gelbooru';
+    $konaChan = new \stdClass(); $konaChan->id = 26; $konaChan->buttonName = 'KonaChan';
+    $deviantArt = new \stdClass(); $deviantArt->id = 34; $deviantArt->buttonName = 'DevArt'; $deviantArt->regex = 'da_id';
+    $manga = new \stdClass(); $manga->id = 36; $manga->buttonName = 'Manga';
+
+    //Creates an array with every website I want to check
+    $websites = [$pixiv,$danbooru,$yandere,$animes,$hAnime,$gelbooru,$konaChan,$deviantArt,$manga];
+    //Creates a array with only the IDs i need
+    $idsToCheck = [];
+    foreach ($websites as $key => $website) {
+        $idsToCheck[$key] = $website->id;
     }
+
+    //Checks if the pic was found in the websites (by checking if the ID is in the header and doesn't have any error)
+    foreach ($decodedJSON->header->index as $jsonHeader) {
+        foreach ($websites as $website) {
+            $id = $website->id;
+            if ($jsonHeader ==$id) {
+                if($jsonHeader->$id->status == 0)
+                    $website->exists = true;
+            }
+        }
+    }
+
+    /*
+    if(property_exists($decodedJSON->results[0], 'data')) {
+        print_r($decodedJSON->results[0]->data);
+    }
+    */
     
