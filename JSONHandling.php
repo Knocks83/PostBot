@@ -111,10 +111,6 @@
     $websites = [$pixiv,$danbooru,$yandere,$animes,$hAnime,$gelbooru,$konaChan,$deviantArt,$manga];
 
     //Checks if the pic was found in the websites (by checking if the ID is in the header and doesn't have any error)
-    foreach ($decodedJSON->header->index as $jsonHeader) {
-        
-    }
-
     $found;
 
     foreach ($websites as $website) {
