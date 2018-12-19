@@ -2,10 +2,29 @@
 function getSauce($image_url) {
     require 'settings.php';
     $db = "5,9,12,21,22,25,26,34,36";
+    $url = "https://saucenao.com/search.php";
 
-    $ch = curl_init("https://saucenao.com/search.php?db=$db&api_key=$api_key&output_type=2&numres=6&url=$image_url");
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $ch = curl_init();
+    // Creates a array with the values to be sent and builds a string to send it via POST
+    $post = [
+        'api_key' => $api_key,
+        'db' => $db,
+        'output_type' => 2,
+        'numres' => 6,
+        'url' => $image_url
+    ];
+    $post_string = http_build_query($post);
+
+    //Creates a array with the curl options, then sets it.
+    $curlOptions = array(
+        CURLOPT_URL => $url,
+        CURLOPT_POST => count($post),
+        CURLOPT_POSTFIELDS => $post_string,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_RETURNTRANSFER => true
+    );
+    curl_setopt_array($ch, $curlOptions);
+
     $json = curl_exec($ch);
     
     // Decode JSON data to PHP object
@@ -29,27 +48,28 @@ function getSauce($image_url) {
     Checks if the pic was found in the websites (by checking if the ID is in the header and doesn't have any error)
     If it finds a website matching those characteristics it sets the property url to the website url
     */
-
-    if(property_exists($json->header, 'index')) {
+    if(isset($json->results) && property_exists($json->header, 'index')) {
         $found = array();
         $i = 0;
-        foreach ($json->header->index as $index) {
-            $i++;
+        foreach ($json->results as $result) {
             foreach ($websites as $website) {
-                $id = $website->id;
-                if($index->id == $website->id && $index->status == 0) {
-                    $website->exists = true;
-                    $website->url = $json->results[$i]->data->ext_urls[0];
+                if($result->header->index_id == $website->id) {
+                    if(isset($website->similarity)) {
+                        if ($website->similarity < floatval($result->header->similarity)) {
+                            $website->similarity = floatval($result->header->similarity);
+                            $website->url = $result->data->ext_urls[0];
+                        }
+                    } else {
+                        $website->similarity = floatval($result->header->similarity);
+                        $website->url = $result->data->ext_urls[0];
+                    }
                     array_push($found, $website);
+                    break;
                 }
             }
         }
-        unset($i);  // I delete the counter variable because it isn't needed anymore
-        
-        // Example processing of the obtained array
-        foreach ($found as $key => $value) {
-            echo("$value->name\t$value->url\n");
-        }
     } else die('Error: nothing found');
+
+    return $found;
 }
 
