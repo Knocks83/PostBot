@@ -1,10 +1,19 @@
 <?php
 function getSauce($image_url) {
     require 'settings.php';
-    $db = "5,9,12,21,22,25,26,34,36";
+    $db = [5,9,12,21,22,25,26,34,36];
     $url = "https://saucenao.com/search.php";
+    
+    // Reading the content of the file DBs.json (containing the list of the DBs)
+    $filename = 'DBs.json';
+    $data = fopen($filename, 'rb');
+    $size = filesize($filename);
+    $dbs = json_decode(fread($data, $size));
+    fclose($data);
+    unset($data, $size, $filename);
 
     $ch = curl_init();
+
     // Creates a array with the values to be sent and builds a string to send it via POST
     $post = [
         'api_key' => $api_key,
@@ -26,23 +35,18 @@ function getSauce($image_url) {
     curl_setopt_array($ch, $curlOptions);
 
     $json = curl_exec($ch);
-    
+
     // Decode JSON data to PHP object
     $json = json_decode($json);
 
-    // Creates various objects with the websites supported by SauceNAO (not all)
-    $pixiv = new \stdClass();       $pixiv->id = 5;         $pixiv->name = 'Pixiv';
-    $danbooru = new \stdClass();    $danbooru->id = 9;      $danbooru->name = 'Danbooru';
-    $yandere = new \stdClass();     $yandere->id = 12;      $yandere->name = 'Yande.re';
-    $animes = new \stdClass();      $animes->id = 21;       $animes->name = 'Anime';
-    $hAnime = new \stdClass();      $hAnime->id = 22;       $hAnime->name = 'Hentai';
-    $gelbooru = new \stdClass();    $gelbooru->id = 25;     $gelbooru->name = 'Gelbooru';
-    $konaChan = new \stdClass();    $konaChan->id = 26;     $konaChan->name = 'KonaChan';
-    $deviantArt = new \stdClass();  $deviantArt->id = 34;   $deviantArt->name = 'DeviantArt';
-    $manga = new \stdClass();       $manga->id = 36;        $manga->name = 'Manga';
+    unset($ch, $post, $post_string, $curlOptions);
 
-    // Creates an array with every website I want to check
-    $websites = [$pixiv,$danbooru,$yandere,$animes,$hAnime,$gelbooru,$konaChan,$deviantArt,$manga];
+    $websites = new \stdClass();
+    foreach ($db as $id) {
+        if(isset($dbs->$id)) {
+            $websites->$id = $dbs->$id;
+        } else print("ID not found ($id)\n");
+    }
 
     /*
     Checks if the pic was found in the websites (by checking if the ID is in the header and doesn't have any error)
@@ -51,21 +55,19 @@ function getSauce($image_url) {
     if(isset($json->results) && property_exists($json->header, 'index')) {
         $found = array();
         $i = 0;
-        foreach ($json->results as $result) {
-            foreach ($websites as $website) {
-                if($result->header->index_id == $website->id) {
-                    if(isset($website->similarity)) {
-                        if ($website->similarity < floatval($result->header->similarity)) {
-                            $website->similarity = floatval($result->header->similarity);
-                            $website->url = $result->data->ext_urls[0];
-                        }
-                    } else {
-                        $website->similarity = floatval($result->header->similarity);
-                        $website->url = $result->data->ext_urls[0];
+        foreach ($json->results as $i => $result) {
+            $id = $result->header->index_id;
+            if (isset($websites->$id)) {
+                if(isset($websites->$id->similarity)) {
+                    if ($websites->$id->similarity < floatval($result->header->similarity)) {
+                        $websites->$id->similarity = floatval($result->header->similarity);
+                        $websites->$id->url = $result->data->ext_urls[0];
                     }
-                    array_push($found, $website);
-                    break;
+                } else {
+                    $websites->$id->similarity = floatval($result->header->similarity);
+                    $websites->$id->url = $result->data->ext_urls[0];
                 }
+                array_push($found, $websites->$id);
             }
         }
     } else die('Error: nothing found');
