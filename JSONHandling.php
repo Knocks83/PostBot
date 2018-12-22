@@ -1,5 +1,5 @@
 <?php
-function getSauce($image_url) {
+function getSauce($image_url, $checkIDs = false) {
     require 'settings.php';
     $db = [5,9,12,21,22,25,26,34,36];
     $url = "https://saucenao.com/search.php";
@@ -54,22 +54,36 @@ function getSauce($image_url) {
     */
     if(isset($json->results) && property_exists($json->header, 'index')) {
         $found = array();
-        $i = 0;
-        foreach ($json->results as $i => $result) {
-            $id = $result->header->index_id;
-            if (isset($websites->$id)) {
-                if(isset($websites->$id->similarity)) {
-                    if ($websites->$id->similarity < floatval($result->header->similarity)) {
+        if ($checkIDs) {
+            foreach ($json->results as $result) {
+                $id = $result->header->index_id;
+                if (isset($websites->$id) && property_exists($result->data, 'ext_urls')) {
+                    if(isset($websites->$id->similarity)) {
+                        if ($websites->$id->similarity < floatval($result->header->similarity)) {
+                            $websites->$id->similarity = floatval($result->header->similarity);
+                            $websites->$id->url = $result->data->ext_urls[0];
+                            $websites->$id->id = $id;
+                        }
+                    } else {
                         $websites->$id->similarity = floatval($result->header->similarity);
                         $websites->$id->url = $result->data->ext_urls[0];
+                        $websites->$id->id = $id;
                     }
-                } else {
-                    $websites->$id->similarity = floatval($result->header->similarity);
-                    $websites->$id->url = $result->data->ext_urls[0];
+                    array_push($found, $websites->$id);
                 }
-                array_push($found, $websites->$id);
+            }
+        } else {
+            foreach ($json->results as $result) {
+                if(property_exists($result->data, 'ext_urls')) {
+                    $tempArray = new stdClass();
+                    $tempArray->similarity = floatval($result->header->similarity);
+                    $tempArray->id = $result->header->index_id;
+                    $tempArray->url = $result->data->ext_urls;
+                    array_push($found, $tempArray);
+                }
             }
         }
+        
     } else die('Error: nothing found');
 
     return $found;
