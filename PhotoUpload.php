@@ -1,6 +1,5 @@
 <?php
-function uploadPhoto($image) {
-    require 'settings.php';
+function uploadPhoto($image, $client_id) {
     $url = 'https://api.imgur.com/3/image';
 
     // Encode it to base64 to send it via POST

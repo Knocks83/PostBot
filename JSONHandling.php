@@ -1,6 +1,5 @@
 <?php
-function getSauce($image_url, $checkIDs = false) {
-    require 'settings.php';
+function getSauce($image_url, $api_key, $checkIDs = false) {
     $db = [5,9,12,21,22,25,26,34,36];
     $url = "https://saucenao.com/search.php";
     
