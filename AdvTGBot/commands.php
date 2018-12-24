@@ -27,5 +27,5 @@ if (in_array($TGBot->chat_id, $fromWho) && isset($TGBot->photo)) {
         [$button]
     ];
 
-    $TGBot->sendPhoto($TGBot->chat_id,$TGBot->photo_file_id,null,$buttonMatrix);
+    $TGBot->sendPhoto($chatID,$TGBot->photo_file_id,null,$buttonMatrix);
 }
