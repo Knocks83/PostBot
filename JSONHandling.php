@@ -1,6 +1,5 @@
 <?php
-function getSauce($image_url, $api_key, $checkIDs = false) {
-    $db = [5,9,12,21,22,25,26,34,36];
+function getSauce($image_url, $api_key, $db = [999], $checkIDs = false) {
     $url = "https://saucenao.com/search.php";
     
     // Reading the content of the file DBs.json (containing the list of the DBs)
