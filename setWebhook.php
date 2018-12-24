@@ -1,11 +1,8 @@
 <?php
-$fpam = '';
-$token = '';
-$dir = '';
-$baseUrl = "https://api.telegram.org/bot$token/setwebhook?";
+require 'settings.php';
+$baseUrl = "https://api.telegram.org/bot$botToken/setwebhook?";
+$param = urlencode("url=$dirPath?fpam=$fpam%26token=$botToken");
 $ch = curl_init();
-
-$param = urlencode("url=$dir?fpam=$fpam%26token=$token");
 
 $curlOptions = array(
     CURLOPT_URL => $baseUrl.$param,
