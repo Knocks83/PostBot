@@ -12,4 +12,5 @@ curl_setopt_array($ch, $curlOptions);
 
 $answer = json_decode(curl_exec($ch));
 
+print($url."\n");
 print($answer->error_code." - ".$answer->description);
