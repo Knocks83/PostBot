@@ -3,7 +3,7 @@
   License, v. 2.0. If a copy of the MPL was not distributed with this
   file, You can obtain one at http://mozilla.org/MPL/2.0/.*/
 $TGBot->settings(['disable_web_page_preview' => false,
-'parse_mode'                                 => 'HTML', //can be markdown
+'parse_mode'                                 => 'Markdown', //can be HTML
 'PostgreSQL'                                 => false,
 'MySQL'                                      => false,
 'adminMySQL'                                 => false, //Use MySQL for global post etc
