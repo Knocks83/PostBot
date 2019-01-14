@@ -1,4 +1,5 @@
 # Postbot
+
 ============
 
 **All the credits for [AdvTGBot](https://github.com/MattiaBLX/AdvTGBot) go to [MattiaBLX](https://https://github.com/MattiaBLX/)**
@@ -50,6 +51,5 @@ When an **authorized user** will send a photo to the bot it will find the sauce 
 That's all Folks!
 For help just [ask me on Telegram](https://t.me/MakeNekosNotNukes)!
 
-
 This Source Code Form is subject to the terms of the GNU Affero General Public License v3.0. If a copy of the AGPL-3.0 was not distributed with this
-file, You can obtain one at https://www.gnu.org/licenses/gpl-3.0.en.html.
+file, You can obtain one at <https://www.gnu.org/licenses/gpl-3.0.en.html>.
