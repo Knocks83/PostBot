@@ -1,20 +1,22 @@
-Postbot
+# Postbot
 ============
 
 **All the credits for [AdvTGBot](https://github.com/MattiaBLX/AdvTGBot) go to [MattiaBLX](https://https://github.com/MattiaBLX/)**
 
-## Requirements:
+## Requirements
 
 1. PHP7 or newer
 2. A **HTTPS** enabled WebServer
 
-## Setup:
+## Setup
 
 First of all you have to clone the Git repository into your server.
 If you have Git installed you can use the following command:
+
 ```bash
 git clone https://github.com/Knocks83/PostBot.git
 ```
+
 otherwise you can just download it as zip and then put the files inside it into your webserver.
 
 ### Set the variables inside `settings.php`
@@ -38,7 +40,7 @@ For more informations about the variables read the comments inside the `settings
 
 The webhook is the URL where Telegram sends every update. You just have to start setWebhook once you've set `settings.php`, it'll do it for you.
 
-## Usage:
+## Usage
 
 When an **authorized user** will send a photo to the bot it will find the sauce and forward the photo with the sauce to the chatID you set in the settings.
 **If set**, it will also send a message in the log chat.
