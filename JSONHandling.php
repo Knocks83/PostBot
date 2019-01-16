@@ -82,6 +82,8 @@ function getSauce($image_url, $api_key, $db = [999], $checkIDs = false) {
             }
         }
         
+    } elseif ($json->header->status == '-2') {
+        $found = array('error' => $json->header->status, 'message' => $json->header->message);
     } else die('Error: nothing found');
 
     return $found;

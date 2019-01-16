@@ -5,8 +5,15 @@ if (in_array($TGBot->chat_id, $fromWho) && isset($TGBot->photo)) {
     $photoUrl = "https://api.telegram.org/file/bot$botToken/$filePath";
 
     unset($filePath);
-   
-    $results = getSauce($photoUrl, $check_output);
+    do {
+        $results = getSauce($photoUrl, $check_output);
+
+        // If it exceeds the maximum request rate it waits then tries again
+        $error = (isset($results['error']) && $results['error'] == '-2') ? true : false;
+        if ($error) {
+            sleep(30);
+        }
+    }while($error);
 
     $mostSimilar = ['similarity' => 0, 'url' => ''];
 
