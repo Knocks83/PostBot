@@ -36,7 +36,7 @@ if (in_array($TGBot->chat_id, $fromWho) && isset($TGBot->photo)) {
 
     $TGBot->sendPhoto($chatID,$TGBot->photo_file_id,null,$buttonMatrix);
 
-    if ($logChat != '') {
+    if ($logChat != '0000') {
         $TGBot->sendMessage($logChat, sprintf("User: [%s](tg://user?id=%s)\nFileID: `%s`",
             $TGBot->first_name.' '.$TGBot->last_name,
             $TGBot->user_id,

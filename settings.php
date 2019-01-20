@@ -11,7 +11,7 @@ $fpam = 'Insert your FPAM key here'; // You can find this starting the bot https
 $chatID = 'Insert the destination chat ID here';  // Chat where the bot will forward the photos
 $botToken = 'Insert the bot token here'; // Get it on https://t.me/BotFather
 $fromWho = [58141179];  // Insert here the people allowed to use the bot, separated with a comma (58141179, anotherID, anotherOne)
-$logChat = '';  // Insert here the chat ID of a chat you want to use as log
+$logChat = '0000';  // Insert here the chat ID of a chat you want to use as log
 
 // Miscellaneous
 $check_output = false;  // Check or not the IDs returned from the query
